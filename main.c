@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void) {
-  int* a = malloc(sizeof(int));
-  (void)a;
+#include "types.h"
+#include "allocator.h"
 
-  return 0;
+int main(void) {
+    i32* ptr = default_allocator.alloc(sizeof(i32));
+
+    default_allocator.dealloc(ptr);
 }
