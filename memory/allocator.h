@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "types.h"
+#include "../types.h"
 
 void zero_dealloc(void* ptr);
 void* zero_malloc(size_t size);
@@ -15,8 +15,8 @@ typedef struct Allocator {
 
 extern const Allocator default_allocator;
 
-#ifdef KAL_ALLOCATOR_IMPL
-#include "logger.h"
+#ifdef ALLOCATOR_H_IMPL
+#include "../logger.h"
 
 const Allocator default_allocator = {
     .alloc   = zero_malloc,
@@ -42,6 +42,6 @@ zero_malloc(size_t size) {
     memset(ptr, 0, size);
     return ptr;
 }
-#endif // KAL_ALLOCATOR_IMPL
+#endif // ALLOCATOR_H_IMPL
 #endif // KAL_ALLOCATOR_H
 
