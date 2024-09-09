@@ -11,6 +11,7 @@ enum {
 };
 typedef struct Dyn_Array_Header Dyn_Array_Header;
 
+
 #define dyn_array_header(a) ((Dyn_Array_Header*)(a) - 1)
 
 #define dyn_array_append(array, val)\
@@ -19,13 +20,23 @@ do {\
     (array)[dyn_array_header(array)->size++] = val;\
 } while (0)
 
+#define dyn_array_swap_remove_at(arr, index)\
+do {\
+    if (index == dyn_array_size(array)) {\
+        dyn_array_pop(array);\
+    }\
+    else {\
+        array[index] = array[dyn_array_size(array) - 1];\
+        dyn_array_pop(array);\
+    }\
+} while (0)
+
 void* dyn_array_init(usize type_size, const Allocator* allocator);
 usize dyn_array_capacity(void* array);
 usize dyn_array_size(void* array);
 void  dyn_array_deinit(void* array);
 void* dyn_array_ensure_capacity(void* array, usize value_size);
-
-
+void  dyn_array_pop(void* array);
 
 
 
@@ -93,6 +104,12 @@ dyn_array_ensure_capacity(void* array, usize value_size) {
 
     return array;
 }
+
+void
+dyn_array_pop(void* array) {
+    dyn_array_header(array)->size--;
+}
+
 #endif // DYN_ARRAY_H_IMPL
 
 #endif // KAL_DYN_ARRAY_H
