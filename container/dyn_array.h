@@ -9,25 +9,32 @@
 enum { 
     DYN_ARRAY_ALLOC_STEP = 8
 };
+
 typedef struct Dyn_Array_Header Dyn_Array_Header;
+struct Dyn_Array_Header {
+    usize            capacity;
+    usize            size;
+    const Allocator* allocator;
+};
+
 
 
 #define dyn_array_header(a) ((Dyn_Array_Header*)(a) - 1)
 
-#define dyn_array_append(array, val)\
+#define dyn_array_append(arr, val)\
 do {\
-    (array) = dyn_array_ensure_capacity((array), sizeof((val)));\
-    (array)[dyn_array_header(array)->size++] = val;\
+    (arr) = dyn_array_ensure_capacity((arr), sizeof((val)));\
+    (arr)[dyn_array_header((arr))->size++] = (val);\
 } while (0)
 
 #define dyn_array_swap_remove_at(arr, index)\
 do {\
-    if (index == dyn_array_size(array)) {\
-        dyn_array_pop(array);\
+    if (index == dyn_array_size((arr)) - 1) {\
+        dyn_array_pop((arr));\
     }\
     else {\
-        array[index] = array[dyn_array_size(array) - 1];\
-        dyn_array_pop(array);\
+        (arr)[index] = (arr)[dyn_array_size((arr)) - 1];\
+        dyn_array_pop((arr));\
     }\
 } while (0)
 
@@ -37,17 +44,13 @@ usize dyn_array_size(void* array);
 void  dyn_array_deinit(void* array);
 void* dyn_array_ensure_capacity(void* array, usize value_size);
 void  dyn_array_pop(void* array);
+void  dyn_array_clear(void* array);
+bool  dyn_array_is_empty(void* array);
 
 
 
 
 #ifdef DYN_ARRAY_H_IMPL
-struct Dyn_Array_Header {
-    usize            capacity;
-    usize            size;
-    const Allocator* allocator;
-};
-
 void*
 dyn_array_init(usize type_size, const Allocator* allocator) {
     usize             alloc_size = sizeof(Dyn_Array_Header) + DYN_ARRAY_ALLOC_STEP * type_size;
@@ -110,6 +113,15 @@ dyn_array_pop(void* array) {
     dyn_array_header(array)->size--;
 }
 
+void
+dyn_array_clear(void* array) {
+    dyn_array_header(array)->size = 0;
+}
+
+bool
+dyn_array_is_empty(void* array) {
+    return dyn_array_header(array)->size <= 0;
+}
 #endif // DYN_ARRAY_H_IMPL
 
 #endif // KAL_DYN_ARRAY_H

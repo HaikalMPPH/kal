@@ -36,6 +36,11 @@ int main(void) {
     dyn_array_pop(array);
     dyn_array_pop(array);
     dyn_array_pop(array);
+    dyn_array_swap_remove_at(array, 2);
+    for (usize i = 0; i < dyn_array_size(array); ++i) {
+        printf("%d, ", array[i]);
+    }
+    puts("");
     printf("%lu\n", dyn_array_size(array));
     printf("%lu\n", dyn_array_capacity(array));
 
