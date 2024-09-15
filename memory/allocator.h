@@ -5,8 +5,8 @@
 #include <string.h>
 #include "../types.h"
 
-void zero_dealloc(void* ptr);
-void* zero_malloc(size_t size);
+void  zero_dealloc(void* ptr);
+void* zero_alloc  (size_t size);
 
 typedef struct Allocator {
     void* (*alloc)(size_t);
@@ -19,7 +19,7 @@ extern const Allocator default_allocator;
 #include "../logger.h"
 
 const Allocator default_allocator = {
-    .alloc   = zero_malloc,
+    .alloc   = zero_alloc,
     .dealloc = zero_dealloc
 };
 
@@ -31,7 +31,7 @@ zero_dealloc(void* ptr) {
     }
 }
 void* 
-zero_malloc(size_t size) {
+zero_alloc(size_t size) {
     void* ptr = malloc(size);
 
     if (!ptr) {
