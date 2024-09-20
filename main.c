@@ -8,33 +8,43 @@
 #include "memory/allocator.h"
 
 #define DYN_ARRAY_H_IMPL
-#include "container/dyn_array.h"
+#include "container/dynarray.h"
 
 #define HASH_MAP_H_IMPL
 #include "container/hash_map.h"
 
 i32 main(void) {
-    i32* arr = dyn_array_init(sizeof(i32), &default_allocator);
-    dyn_array_append(arr, 1);
-    dyn_array_append(arr, 2);
-    dyn_array_append(arr, 3);
-    dyn_array_append(arr, 4);
-    dyn_array_append(arr, 5);
-    dyn_array_append(arr, 6);
-    dyn_array_append(arr, 7);
-    dyn_array_append(arr, 8);
-    dyn_array_append(arr, 9);
-    dyn_array_append(arr, 0);
+    i32* arr = kal_dynarray_init(sizeof(i32), &default_allocator);
+    kal_dynarray_append(arr, 1);
+    printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
+    kal_dynarray_append(arr, 2);
+    kal_dynarray_append(arr, 3);
+    kal_dynarray_append(arr, 4);
+    kal_dynarray_append(arr, 5);
+    kal_dynarray_append(arr, 6);
+    kal_dynarray_append(arr, 7);
+    kal_dynarray_append(arr, 8);
+    kal_dynarray_append(arr, 9);
+    kal_dynarray_append(arr, 0);
+    printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
 
-    for (usize i = 0; i < dyn_array_size(arr); ++i) {
-        dyn_array_swap_remove_at(arr, i);
+    for (usize i = 0; i < kal_dynarray_size(arr); ++i) {
+        kal_dynarray_swap_remove_at(arr, i);
     }
-    for (usize i = 0; i < dyn_array_size(arr); ++i) {
+    for (usize i = 0; i < kal_dynarray_size(arr); ++i) {
         printf("%d, ", arr[i]);
     }
     puts("");
+    printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
 
-    dyn_array_deinit(arr);
+    kal_dynarray_shrink_fit(arr);
+    for (usize i = 0; i < kal_dynarray_size(arr); ++i) {
+        printf("%d, ", arr[i]);
+    }
+    puts("");
+    printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
+
+    kal_dynarray_deinit(arr);
 
     return 0;
 }

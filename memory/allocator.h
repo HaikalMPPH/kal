@@ -8,17 +8,17 @@
 void  zero_dealloc(void* ptr);
 void* zero_alloc  (size_t size);
 
-typedef struct Allocator {
+typedef struct kal_allocator {
     void* (*alloc)(size_t);
     void  (*dealloc)(void*);
-} Allocator;
+} kal_allocator;
 
-extern const Allocator default_allocator;
+extern const kal_allocator default_allocator;
 
 #ifdef ALLOCATOR_H_IMPL
 #include "../logger.h"
 
-const Allocator default_allocator = {
+const kal_allocator default_allocator = {
     .alloc   = zero_alloc,
     .dealloc = zero_dealloc
 };

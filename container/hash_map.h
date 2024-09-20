@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include "../types.h"
-#include "../container/dyn_array.h"
+#include "../container/dynarray.h"
 #include "../memory/allocator.h"
 
 // :::::::::::::::::::::::::::::: DECLARATION ::::::::::::::::::::::::::::::::::::::
@@ -14,7 +14,7 @@ do {\
 
 // Hashing function based on FNV-1a algorithm
 usize hash_map_hash  (const char* key, usize num_of_elements);
-void* hash_map_init  (usize type_size, const Allocator* allocator);
+void* hash_map_init  (usize type_size, const kal_allocator* allocator);
 void  hash_map_deinit(void* hash_map);
 
 
@@ -38,13 +38,13 @@ hash_map_hash(const char* key, usize num_of_elements) {
 }
 
 void* 
-hash_map_init(usize type_size, const Allocator* allocator) {
-    return dyn_array_init(type_size, allocator);
+hash_map_init(usize type_size, const kal_allocator* allocator) {
+    return kal_dynarray_init(type_size, allocator);
 }
 
 void 
 hash_map_deinit(void* hash_map) {
-    dyn_array_deinit(hash_map);
+    kal_dynarray_deinit(hash_map);
 }
 #endif // HASH_MAP_H_IMPL
 
