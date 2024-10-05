@@ -4,17 +4,17 @@
 
 #include "types.h"
 
-#define ALLOCATOR_H_IMPL
+#define KAL_ALLOCATOR_H_IMPL
 #include "memory/allocator.h"
 
-#define DYN_ARRAY_H_IMPL
+#define KAL_DYNARRAY_H_IMPL
 #include "container/dynarray.h"
 
 #define HASH_MAP_H_IMPL
 #include "container/hash_map.h"
 
 i32 main(void) {
-    i32* arr = kal_dynarray_init(sizeof(i32), &default_allocator);
+    i32* arr = kal_dynarray_init(sizeof(i32), &kal_default_allocator);
     kal_dynarray_append(arr, 1);
     printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
     kal_dynarray_append(arr, 2);

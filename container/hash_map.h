@@ -14,7 +14,7 @@ do {\
 
 // Hashing function based on FNV-1a algorithm
 usize hash_map_hash  (const char* key, usize num_of_elements);
-void* hash_map_init  (usize type_size, const kal_allocator* allocator);
+void* hash_map_init  (usize type_size, const kal_allocator_s* allocator);
 void  hash_map_deinit(void* hash_map);
 
 
@@ -38,7 +38,7 @@ hash_map_hash(const char* key, usize num_of_elements) {
 }
 
 void* 
-hash_map_init(usize type_size, const kal_allocator* allocator) {
+hash_map_init(usize type_size, const kal_allocator_s* allocator) {
     return kal_dynarray_init(type_size, allocator);
 }
 

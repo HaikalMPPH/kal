@@ -6,19 +6,19 @@
 #include "../types.h"
 
 void  zero_dealloc(void* ptr);
-void* zero_alloc  (size_t size);
+void* zero_alloc  (usize size);
 
-typedef struct kal_allocator {
+typedef struct kal_allocator_s {
     void* (*alloc)(size_t);
     void  (*dealloc)(void*);
-} kal_allocator;
+} kal_allocator_s;
 
-extern const kal_allocator default_allocator;
+extern const kal_allocator_s kal_default_allocator;
 
-#ifdef ALLOCATOR_H_IMPL
+#ifdef KAL_ALLOCATOR_H_IMPL
 #include "../logger.h"
 
-const kal_allocator default_allocator = {
+const kal_allocator_s kal_default_allocator = {
     .alloc   = zero_alloc,
     .dealloc = zero_dealloc
 };
@@ -31,7 +31,7 @@ zero_dealloc(void* ptr) {
     }
 }
 void* 
-zero_alloc(size_t size) {
+zero_alloc(usize size) {
     void* ptr = malloc(size);
 
     if (!ptr) {
@@ -42,6 +42,6 @@ zero_alloc(size_t size) {
     memset(ptr, 0, size);
     return ptr;
 }
-#endif // ALLOCATOR_H_IMPL
+#endif // kAL_ALLOCATOR_H_IMPL
 #endif // KAL_ALLOCATOR_H
 
