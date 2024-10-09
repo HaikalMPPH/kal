@@ -13,7 +13,12 @@
 #define HASH_MAP_H_IMPL
 #include "container/hash_map.h"
 
+#define KAL_RNG_H_IMPL
+#include "rng/rng.h"
+
 i32 main(void) {
+    kal_rng_init();
+
     i32* arr = kal_dynarray_init(sizeof(i32), &kal_default_allocator);
     kal_dynarray_append(arr, 1);
     printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
@@ -45,6 +50,13 @@ i32 main(void) {
     printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
 
     kal_dynarray_deinit(arr);
+
+    for (usize i = 0; i < 5; ++i) {
+        if (kal_rng_chance(89.f))
+            printf("SUCC\n");
+        else 
+            printf("ERRR\n");
+    }
 
     return 0;
 }

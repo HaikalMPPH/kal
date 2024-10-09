@@ -6,6 +6,8 @@
 #include "../container/dynarray.h"
 #include "../memory/allocator.h"
 
+// TODO: NOT DONE.
+
 // :::::::::::::::::::::::::::::: DECLARATION ::::::::::::::::::::::::::::::::::::::
 #define hash_map_get(map, key)\
 do {\

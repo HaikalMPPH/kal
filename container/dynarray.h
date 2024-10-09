@@ -3,27 +3,26 @@
 #include <string.h>
 #include "../types.h"
 
-#define KAL_ALLOCATOR_H_IMPL
 #include "../memory/allocator.h"
 
 
 typedef struct kal_dynarray_header_s kal_dynarray_header_s;
 struct kal_dynarray_header_s {
-    usize            capacity;
-    usize            size;
+    usize capacity;
+    usize size;
     const kal_allocator_s* allocator;
 };
 
-
-
-#define kal_dynarray_header_s(a) ((kal_dynarray_header_s*)(a) - 1)
+// get the header of the array
+#define kal_dynarray_header(a) ((kal_dynarray_header_s*)(a) - 1)
 
 #define kal_dynarray_append(arr, val)\
 do {\
     (arr) = kal_dynarray_ensure_capacity((arr), sizeof((val)));\
-    (arr)[kal_dynarray_header_s((arr))->size++] = (val);\
+    (arr)[kal_dynarray_header((arr))->size++] = (val);\
 } while (0)
 
+// remove and swap the element at index i with the last element.
 #define kal_dynarray_swap_remove_at(arr, index)\
 do {\
     if (index == kal_dynarray_size((arr)) - 1) {\
@@ -35,15 +34,15 @@ do {\
     }\
 } while (0)
 
-#define kal_dynarray_size(arr) kal_dynarray_header_s((arr))->size
-#define kal_dynarray_capacity(arr) kal_dynarray_header_s((arr))->capacity
+#define kal_dynarray_size(arr) kal_dynarray_header((arr))->size
+#define kal_dynarray_capacity(arr) kal_dynarray_header((arr))->capacity
 
 #define kal_dynarray_shrink_fit(array)\
 do {\
-    kal_dynarray_header_s* header = kal_dynarray_header_s((array));\
+    kal_dynarray_header_s* header = kal_dynarray_header((array));\
     void* new_arr = kal_dynarray_init_with_size(header->size, sizeof(*(array)), header->allocator);\
-    memcpy(new_arr, (array), sizeof(*(array)) * kal_dynarray_header_s(new_arr)->capacity);\
-    kal_dynarray_header_s(new_arr)->size = header->size;\
+    memcpy(new_arr, (array), sizeof(*(array)) * kal_dynarray_header(new_arr)->capacity);\
+    kal_dynarray_header(new_arr)->size = header->size;\
     kal_dynarray_deinit(array);\
     array = new_arr;\
 } while (0)
@@ -59,15 +58,16 @@ bool  kal_dynarray_is_empty(void* array);
 
 
 
-#ifdef KAL_DYNARRAY_H_IMPL
+#ifdef KAL_CONTAINER_DYNARRAY_H_IMPL
 enum { 
     DYN_ARRAY_ALLOC_STEP = 4
 };
 
+// init dynarray with initial capacity for the header
 void* 
 kal_dynarray_init_with_size(usize initial_cap, usize type_size, const kal_allocator_s* allocator) {
-    usize             alloc_size = sizeof(kal_dynarray_header_s) + initial_cap * type_size;
-    kal_dynarray_header_s* ptr        = allocator->alloc(alloc_size);
+    usize alloc_size = sizeof(kal_dynarray_header_s) + initial_cap * type_size;
+    kal_dynarray_header_s* ptr = allocator->alloc(alloc_size);
 
     if (ptr) {
         ptr->capacity  = initial_cap;
@@ -79,6 +79,8 @@ kal_dynarray_init_with_size(usize initial_cap, usize type_size, const kal_alloca
 
     return (void*)ptr;
 }
+
+// initialize dynarray with the default alloc step
 void*
 kal_dynarray_init(usize type_size, const kal_allocator_s* allocator) {
     return kal_dynarray_init_with_size(DYN_ARRAY_ALLOC_STEP, type_size, allocator);
@@ -86,21 +88,28 @@ kal_dynarray_init(usize type_size, const kal_allocator_s* allocator) {
 
 void 
 kal_dynarray_deinit(void* array) {
-    kal_dynarray_header_s* header = kal_dynarray_header_s(array);
+    kal_dynarray_header_s* header = kal_dynarray_header(array);
     header->allocator->dealloc(header);
 }
 
 void*
 kal_dynarray_ensure_capacity(void* array, usize value_size) {
-    if (kal_dynarray_header_s(array)->size >= kal_dynarray_header_s(array)->capacity - 1) {
-        usize           new_size   = sizeof(kal_dynarray_header_s) + value_size * ((kal_dynarray_header_s(array)->capacity + DYN_ARRAY_ALLOC_STEP));
-        kal_dynarray_header_s* new_header = kal_dynarray_header_s(array)->allocator->alloc(new_size);
+    if (
+        kal_dynarray_header(array)->size >= kal_dynarray_header(array)->capacity - 1
+    ) {
+        usize new_size = 
+            sizeof(kal_dynarray_header_s) 
+            + value_size 
+            * ((kal_dynarray_header(array)->capacity + DYN_ARRAY_ALLOC_STEP));
+        kal_dynarray_header_s* new_header = 
+            kal_dynarray_header(array)->allocator->alloc(new_size);
 
         if (new_header) {
-            //new_header->capacity  = kal_dynarray_capacity(array) + DYN_ARRAY_ALLOC_STEP;
-            new_header->capacity  = kal_dynarray_capacity(array) << 1;
-            new_header->allocator = kal_dynarray_header_s(array)->allocator;
-            new_header->size      = kal_dynarray_size(array);
+            new_header->capacity = kal_dynarray_capacity(array) << 1;
+            new_header->allocator = kal_dynarray_header(array)->allocator;
+            new_header->size = kal_dynarray_size(array);
+
+            // set the pointer to the next address available for the array elements.
             new_header += 1;
         }
 
@@ -118,16 +127,16 @@ kal_dynarray_ensure_capacity(void* array, usize value_size) {
 
 void
 kal_dynarray_pop(void* array) {
-    kal_dynarray_header_s(array)->size--;
+    kal_dynarray_header(array)->size--;
 }
 
 void
 kal_dynarray_clear(void* array) {
-    kal_dynarray_header_s(array)->size = 0;
+    kal_dynarray_header(array)->size = 0;
 }
 
 bool
 kal_dynarray_is_empty(void* array) {
-    return kal_dynarray_header_s(array)->size <= 0;
+    return kal_dynarray_header(array)->size <= 0;
 }
-#endif // KAL_DYNARRAY_H_IMPL
+#endif // KAL_CONTAINER_DYNARRAY_H_IMPL
