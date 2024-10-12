@@ -27,6 +27,9 @@ void KalDynArrayClear(KalDynArray* dynarray);
 void KalDynArraySwapRemoveAt(KalDynArray* dynarray, USize index);
 
 
+
+
+
 #ifdef KAL_CONTAINER_DYNARRAY_IMPL
 constexpr USize DYNARRAY_INIT_CAP = 4;
 
@@ -60,7 +63,8 @@ void KalDynArrayAdd(KalDynArray* dynarray, void* element) {
 }
 
 void KalDynArrayResize(KalDynArray* dynarray, USize newCapacity) {
-    void* newArray = dynarray->allocator->alloc(dynarray->elementSize * newCapacity);
+    void* newArray = 
+        dynarray->allocator->alloc(dynarray->elementSize * newCapacity);
 
     memcpy(newArray, dynarray->items, dynarray->size * dynarray->elementSize);
 
@@ -72,6 +76,7 @@ void KalDynArrayResize(KalDynArray* dynarray, USize newCapacity) {
 void KalDynArrayPop(KalDynArray* dynarray) {
     --dynarray->size;
 }
+
 void KalDynArrayClear(KalDynArray* dynarray) {
     dynarray->size = 0;
 }
