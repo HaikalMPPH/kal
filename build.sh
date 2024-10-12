@@ -1,2 +1,2 @@
 SRC="*.c ";
-gcc --std=c23 -fsanitize=leak -pedantic -Wall -Werror -g -o main $SRC;
+gcc --std=c23 -fsanitize=leak,address -pedantic -Wall -Werror -g -o main $SRC;

@@ -16,10 +16,10 @@
 #define KAL_RNG_H_IMPL
 #include "rng/rng.h"
 
-i32 main(void) {
+I32 main(void) {
     kal_rng_init();
 
-    i32* arr = kal_dynarray_init(sizeof(i32), &kal_default_allocator);
+    I32* arr = kal_dynarray_init(sizeof(i32), &kal_default_allocator);
     kal_dynarray_append(arr, 1);
     printf("size: %ld, capacity: %ld - %lu\n", kal_dynarray_size(arr), kal_dynarray_capacity(arr), sizeof(arr));
     kal_dynarray_append(arr, 2);
