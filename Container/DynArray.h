@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assert.h>
 #include <stdlib.h>
 #include "../Types.h"
 #include "../Memory/Allocator.h"
@@ -68,7 +69,20 @@ void KalDynArrayResize(KalDynArray* dynarray, USize newCapacity) {
     dynarray->capacity = newCapacity;
 }
 
-void KalDynArrayPop(KalDynArray* dynarray) {}
-void KalDynArrayClear(KalDynArray* dynarray) {}
-void KalDynArraySwapRemoveAt(KalDynArray* dynarray, USize index) {}
+void KalDynArrayPop(KalDynArray* dynarray) {
+    --dynarray->size;
+}
+void KalDynArrayClear(KalDynArray* dynarray) {
+    dynarray->size = 0;
+}
+
+void KalDynArraySwapRemoveAt(KalDynArray* dynarray, USize index) {
+    assert(index < dynarray->size - 1);
+    memcpy(
+        (U8*)dynarray->items + (index * dynarray->elementSize),
+        (U8*)dynarray->items + ((dynarray->size - 1)  * dynarray->elementSize),
+        dynarray->elementSize
+    );
+    --dynarray->size;
+}
 #endif // KAL_CONTAINER_DYNARRAY_IMPL
