@@ -3,42 +3,40 @@
 #include <string.h>
 #include "../types.h"
 
+// Allocator function: void* (*)(size_t)
 #ifndef KAL_ALLOC
 # define KAL_ALLOC malloc
 #endif
 
+// De-allocator function: void (*)(void*)
 #ifndef KAL_DEALLOC
 # define KAL_DEALLOC free
 #endif
 
-
-struct kal_allocator {
+typedef struct kal_allocator_s {
     void* (*alloc)(usize);
     void (*dealloc)(void*);
-};
+} kal_allocator_s;
 
-extern const struct kal_allocator kal_std_allocator;
+extern const kal_allocator_s kal_std_allocator;
 
-#ifdef KAL_MEMORY_ALLOCATOR_IMPL
-#include "../logger.h"
-
+#ifdef KAL_MEM_ALLOCATOR_IMPL
 static
 void* 
-stdAlloc(usize size) {
+std_alloc(usize size) {
     void* ptr = malloc(size);
     return ptr;
 }
 
 static
 void 
-stdDealloc(void* ptr) {
+std_dealloc(void* ptr) {
     free(ptr);
-    ptr = nullptr;
 }
 
-const struct kal_allocator kal_std_allocator = {
-    .alloc   = stdAlloc,
-    .dealloc = stdDealloc,
+const kal_allocator_s kal_std_allocator = {
+    .alloc   = std_alloc,
+    .dealloc = std_dealloc,
 };
 #endif // kAL_MEMORY_ALLOCATOR_IMPL
 
