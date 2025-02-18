@@ -1,17 +1,5 @@
 #pragma once
-#include <stdlib.h>
-#include <string.h>
-#include "../types.h"
-
-// Allocator function: void* (*)(size_t)
-#ifndef KAL_ALLOC
-# define KAL_ALLOC malloc
-#endif
-
-// De-allocator function: void (*)(void*)
-#ifndef KAL_DEALLOC
-# define KAL_DEALLOC free
-#endif
+#include "kal_types.h"
 
 typedef struct kal_allocator_s {
     void* (*alloc)(usize);
@@ -20,23 +8,29 @@ typedef struct kal_allocator_s {
 
 extern const kal_allocator_s kal_std_allocator;
 
-#ifdef KAL_MEM_ALLOCATOR_IMPL
-static
+
+#ifdef KAL_ALLOCATOR_IMPL
+#include <stdlib.h>
+#include <string.h>
+#include "kal_defines.h"
+
+KAL_INLINE
 void* 
 std_alloc(usize size) {
     void* ptr = malloc(size);
+    memset(ptr, 0, size);
     return ptr;
 }
 
-static
+KAL_INLINE
 void 
 std_dealloc(void* ptr) {
     free(ptr);
 }
 
 const kal_allocator_s kal_std_allocator = {
-    .alloc   = std_alloc,
+    .alloc = std_alloc,
     .dealloc = std_dealloc,
 };
-#endif // kAL_MEMORY_ALLOCATOR_IMPL
+#endif // kAL_ALLOCATOR_IMPL
 

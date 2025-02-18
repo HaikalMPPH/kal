@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../common.h"
-#include "../types.h"
-#include "../mem/allocator.h"
+#include "kal_defines.h"
+#include "kal_types.h"
+#include "kal_allocator.h"
 
 typedef struct kal_dynarray_s {
     void* items;
-    usize elements_size,
+    usize element_size,
           size,
           capacity;
     const kal_allocator_s* allocator;
@@ -14,7 +14,7 @@ typedef struct kal_dynarray_s {
 
 kal_dynarray_s 
 kal_dynarray_init(
-    usize elements_size,
+    usize element_size,
     usize init_capacity,
     const kal_allocator_s* allocator
 );
@@ -27,7 +27,7 @@ kal_dynarray_ensure_cap(
     kal_dynarray_s* d
 );
 void 
-kal_dynarray_append(
+kal_dynarray_add(
     kal_dynarray_s* d,
     void* element
 );
@@ -48,18 +48,18 @@ kal_dynarray_remove_at(
 
 
 
-#ifdef KAL_DS_DYNARRAY_IMPL
+#ifdef KAL_DYNARRAY_IMPL
 #include <string.h>
 
 kal_dynarray_s 
 kal_dynarray_init(
-    usize elements_size,
+    usize element_size,
     usize init_capacity,
     const kal_allocator_s* allocator
 ) {
     return (kal_dynarray_s) {
-        .items = allocator->alloc(elements_size * init_capacity),
-        .elements_size = elements_size,
+        .items = allocator->alloc(element_size * init_capacity),
+        .element_size = element_size,
         .size = 0,
         .capacity = init_capacity,
         .allocator = allocator,
@@ -88,7 +88,7 @@ kal_dynarray_ensure_cap(
         memcpy(
             temp,
             d->items,
-            d->capacity * d->elements_size
+            d->capacity * d->element_size
         );
         d->allocator->dealloc(d->items);
         d->items = temp;
@@ -97,15 +97,15 @@ kal_dynarray_ensure_cap(
 }
 
 void 
-kal_dynarray_append(
+kal_dynarray_add(
     kal_dynarray_s* d,
     void* element
 ) {
     kal_dynarray_ensure_cap(d);
     memcpy(
-        ((u8*)d->items) + d->elements_size * d->size,
+        ((u8*)d->items) + d->element_size * d->size,
         element,
-        d->elements_size
+        d->element_size
     );
     ++d->size;
 }
@@ -116,9 +116,9 @@ kal_dynarray_swap_remove(
     usize index
 ) {
     memcpy(
-        ((u8*)d->items) + d->elements_size * index,
-        ((u8*)d->items) + d->elements_size * (d->size - 1),
-        d->elements_size
+        ((u8*)d->items) + d->element_size * index,
+        ((u8*)d->items) + d->element_size * (d->size - 1),
+        d->element_size
     );
     kal_dynarray_pop(d);
 }

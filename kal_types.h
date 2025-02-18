@@ -16,21 +16,20 @@ typedef uint64_t u64;
 typedef size_t  usize;
 
 // Used for conditionals with bitmasking
-typedef u8 bool8;
-typedef u16 bool16;
-typedef u32 bool32;
-typedef u64 bool64;
+typedef uint8_t bool8;
+typedef uint16_t bool16;
+typedef uint32_t bool32;
+typedef uint64_t bool64;
 
 typedef float f32;
 typedef double f64;
 
-typedef struct vec2f_s {
-    f32 x, y;
-} vec2f_s;
-typedef struct vec3f_s {
-    f32 x, y, z;
-} vec3f_s;
-typedef struct vec4f_s {
-    f32 x, y, z, w;
-} vec4f_s;
-
+//typedef struct vec2f_s {
+//    f32 x, y;
+//} vec2f_s;
+//typedef struct vec3f_s {
+//    f32 x, y, z;
+//} vec3f_s;
+//typedef struct vec4f_s {
+//    f32 x, y, z, w;
+//} vec4f_s;
