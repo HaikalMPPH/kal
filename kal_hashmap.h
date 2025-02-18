@@ -145,7 +145,6 @@ kal_hashmap_add(
     for (usize i = 0; i < h->capacity; ++i) {
         // if the byte/string that resides in this ptr is not null.
         // kal_std_allocator always initialized the memory to zero when allocating.
-        // TODO this cause segfault
         if (kv_ptr->key != NULL && *kv_ptr->key != 0) {
             // Linear probing
             index = (index + 1) % h->capacity;
