@@ -1,6 +1,6 @@
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // Name: kal_bit.h
-// Usage: Bit logic and manipulation helper
+// Des: Bit logic and manipulation helper
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #pragma once
 

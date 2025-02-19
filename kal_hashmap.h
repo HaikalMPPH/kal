@@ -1,3 +1,7 @@
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// Name: kal_hashmap.h
+// Desc: Open addressing hashmap/hashtable
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #pragma once
 
 #include "kal_allocator.h"
@@ -41,11 +45,11 @@ kal_hashmap_kv_stride(
     const kal_hashmap_s* h
 );
 
-//void
-//kal_hashmap_remove_at(
-//    kal_hashmap_s* h,
-//    const char* key
-//);
+void
+kal_hashmap_remove_at(
+    kal_hashmap_s* h,
+    const char* key
+);
 
 void
 kal_hashmap_add(
@@ -99,18 +103,18 @@ kal_hashmap_init(
 }
 
 // Removal might not be used for personal use.
-//void
-//kal_hashmap_remove_at(
-//    kal_hashmap_s* h,
-//    const char* key
-//) {
-//    memset(
-//        kal_hashmap_get(h, key),
-//        0,
-//        h->element_size
-//    );
-//    --h->size;
-//}
+void
+kal_hashmap_remove_at(
+    kal_hashmap_s* h,
+    const char* key
+) {
+    memset(
+        kal_hashmap_get(h, key),
+        0,
+        h->element_size
+    );
+    --h->size;
+}
 
 void
 kal_hashmap_deinit(
