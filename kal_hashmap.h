@@ -38,13 +38,6 @@ kal_hashmap_deinit(
     kal_hashmap_s* h
 );
 
-// Distance (in bytes) of each kv in the hashmap
-// Basically sizeof(kv) + element_size
-usize
-kal_hashmap_kv_stride(
-    const kal_hashmap_s* h
-);
-
 void
 kal_hashmap_remove_at(
     kal_hashmap_s* h,
@@ -74,6 +67,14 @@ kal_hashmap_get(
 #ifdef KAL_HASHMAP_IMPL
 #include "kal_defines.h"
 
+// Distance (in bytes) of each kv in the hashmap
+// Basically sizeof(kv) + element_size
+KAL_INLINE
+usize
+kv_stride(
+    const kal_hashmap_s* h
+);
+
 KAL_INLINE
 void
 ensure_cap(
@@ -102,13 +103,12 @@ kal_hashmap_init(
     };
 }
 
-// Removal might not be used for personal use.
 void
 kal_hashmap_remove_at(
     kal_hashmap_s* h,
     const char* key
 ) {
-    memset(
+    kal_memutil_byte_set(
         kal_hashmap_get(h, key),
         0,
         h->element_size
@@ -121,13 +121,6 @@ kal_hashmap_deinit(
     kal_hashmap_s* h
 ) {
     h->allocator->dealloc(h->kvs);
-}
-
-usize
-kal_hashmap_kv_stride(
-    const kal_hashmap_s* h
-) {
-    return (sizeof(kal_hashmap_kv_s) + (h->element_size));
 }
 
 void
@@ -143,7 +136,7 @@ kal_hashmap_add(
 
     // Some pointer voodoo.
     kal_hashmap_kv_s* kv_ptr = (kal_hashmap_kv_s*)(
-        ((char*)h->kvs) + (kal_hashmap_kv_stride(h) * index)
+        ((char*)h->kvs) + (kv_stride(h) * index)
     );
 
     for (usize i = 0; i < h->capacity; ++i) {
@@ -153,7 +146,7 @@ kal_hashmap_add(
             // Linear probing
             index = (index + 1) % h->capacity;
             kv_ptr = (kal_hashmap_kv_s*)(
-                ((char*)h->kvs) + (kal_hashmap_kv_stride(h) * index)
+                ((char*)h->kvs) + (kv_stride(h) * index)
             );
 
             continue;
@@ -162,7 +155,7 @@ kal_hashmap_add(
         break;
     }
     kv_ptr->key = key;
-    memcpy(
+    kal_memutil_byte_copy(
         //((char*)kv_ptr) + sizeof(h->kvs->key),
         kv_ptr->item,
         val,
@@ -179,7 +172,7 @@ kal_hashmap_set(
     const char* key,
     void* val
 ) {
-    memcpy(
+    kal_memutil_byte_copy(
         kal_hashmap_get(h, key),
         val,
         h->element_size
@@ -194,7 +187,7 @@ kal_hashmap_get(
     usize index = h->hash_function(key) % h->capacity;
 
     kal_hashmap_kv_s* kv_ptr = (kal_hashmap_kv_s*)(
-        ((char*)h->kvs) + (kal_hashmap_kv_stride(h) * index)
+        ((char*)h->kvs) + (kv_stride(h) * index)
     );
     for (usize i = 0; i < h->capacity; ++i) {
         if (kv_ptr->key != NULL && strcmp(kv_ptr->key, key) == 0) {
@@ -204,11 +197,19 @@ kal_hashmap_get(
         // Linear probing
         index = (index + 1) % h->capacity;
         kv_ptr = (kal_hashmap_kv_s*)(
-            ((char*)h->kvs) + (kal_hashmap_kv_stride(h) * index)
+            ((char*)h->kvs) + (kv_stride(h) * index)
         );
     }
 
     return NULL;
+}
+
+KAL_INLINE
+usize
+kv_stride(
+    const kal_hashmap_s* h
+) {
+    return (sizeof(kal_hashmap_kv_s) + (h->element_size));
 }
 
 KAL_INLINE
@@ -240,7 +241,7 @@ ensure_cap(
         // An even more voodoo shit.
         // The original kv of hashmap
         kal_hashmap_kv_s* kv_ptr = (kal_hashmap_kv_s*)(
-            ((char*)h->kvs) + (kal_hashmap_kv_stride(h) * i)
+            ((char*)h->kvs) + (kv_stride(h) * i)
         );
 
         if (kv_ptr->key != NULL) {

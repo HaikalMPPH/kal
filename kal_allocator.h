@@ -1,4 +1,6 @@
-#pragma once
+#ifndef KAL_ALLOCATOR_H
+#define KAL_ALLOCATOR_H
+
 #include "kal_types.h"
 
 typedef struct kal_allocator_s {
@@ -11,14 +13,14 @@ extern const kal_allocator_s kal_std_allocator;
 
 #ifdef KAL_ALLOCATOR_IMPL
 #include <stdlib.h>
-#include <string.h>
 #include "kal_defines.h"
+#include "kal_memutil.h"
 
 KAL_INLINE
 void* 
 std_alloc(usize size) {
     void* ptr = malloc(size);
-    memset(ptr, 0, size);
+    kal_memutil_byte_set(ptr, 0, size);
     return ptr;
 }
 
@@ -32,5 +34,6 @@ const kal_allocator_s kal_std_allocator = {
     .alloc = std_alloc,
     .dealloc = std_dealloc,
 };
-#endif // kAL_ALLOCATOR_IMPL
+#endif // KAL_ALLOCATOR_IMPL
 
+#endif // KAL_ALLOCATOR_H

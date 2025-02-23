@@ -41,7 +41,7 @@ kal_dynarray_pop(
     kal_dynarray_s* d
 );
 void 
-kal_dynarray_remove_at(
+kal_dynarray_swap_remove(
     kal_dynarray_s* d,
     usize index
 );

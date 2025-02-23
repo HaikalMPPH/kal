@@ -14,3 +14,7 @@
 
 // :: Array tools :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #define kal_arrlen(arr) sizeof((arr)) / sizeof((arr)[0])
+
+// :: Max and Min :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#define kal_max(a, b) (a) > (b) ? (a) : (b)
+#define kal_min(a, b) (a) < (b) ? (a) : (b)
