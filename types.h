@@ -17,22 +17,3 @@ typedef size_t  usize;
 
 typedef float f32;
 typedef double f64;
-
-typedef union vec2f_u {
-    f32 arr[2];
-    struct {
-        f32 x, y;
-    };
-} vec2f_u;
-typedef union vec3f_u {
-    f32 arr[3];
-    struct {
-        f32 x, y, z;
-    };
-} vec3f_u;
-typedef union vec4f_u {
-    f32 arr[4];
-    struct {
-        f32 x, y, z, w;
-    };
-} vec4f_u;

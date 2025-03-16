@@ -1,10 +1,11 @@
 #pragma once
-#include "kal_types.h"
-#include "kal_defines.h"
 
-KAL_INLINE
+#include "../types.h"
+#include "../defines.h"
+
+static KAL_INLINE
 usize
-kal_hashing_fnv1a(
+kal_hash_fnv1a(
     const char* str
 ) {
     usize hash = 0xcbf29ce484222325; // fnv offset basis

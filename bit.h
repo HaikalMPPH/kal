@@ -4,9 +4,8 @@
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #pragma once
 
-#include "kal_defines.h"
-#include "kal_types.h"
-#include <stdbool.h>
+#include "defines.h"
+#include "types.h"
 
 #define kal_bit_enable(a, b) (a) |= (b)
 #define kal_bit_disable(a, b) (a) &= ~(b)
